@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>n000b_UI</title>
+		<!--<link rel='stylesheet' href="nui/css/nui_gallery.css">-->
+        <style>
+            body {
+                background-color: rgb(220,220,220);
+                color: black;
+                font: caption;
+				margin: 0;
+				padding: 0;
+            }
+
+			main {
+				overflow: auto;
+				max-width: 1024px;
+				margin: auto;
+				padding-left: 2rem;
+				padding-right: 2rem;
+			}
+			main section{
+				margin-bottom: 4rem;
+			}
+			main section h1{
+				margin-top: 2rem;
+				margin-bottom: 2rem;
+				font-weight: 200;
+				font-size: 1.5rem;
+				opacity: 0.7;
+			}
+
+			header {
+				background-color: rgba(180,180,180);
+				padding-left: 2rem;
+				padding-right: 2rem;
+				color: white;
+				height: 3rem;
+				display: flex;
+				align-items: center;
+			}
+			.toggle {
+				margin-left:auto;
+				cursor: pointer;
+			}
+			body.dark {
+				color: white;
+				background-color: rgb(40,40,40);
+			}
+			.dark header {
+				background-color: rgba(50,50,50);
+			}
+			.slide {
+				width: 100%;
+				height: auto;
+				aspect-ratio: 16 / 9;
+				margin-bottom: 2rem;
+			}
+        </style>
+        <script type="module">
+            import ut from "./nui/nui_ut.js";
+			import gallery from "./nui/nui_gallery.js";
+			import generate from '../nui/nui_generate_data.js';
+
+			let prop = {
+				settings: { verbose:true, gap:0, show_bubbles:true, show_info:true, show_arrows:true, show_fullscreen:true },
+				media: [
+				]
+			}
+			for(let i=0; i<10; i++){
+				let rand = Math.ceil(Math.random()*360);
+				prop.media.push({name:generate.sentence(10,3,true), url:`./slide/webp_full_hd/${ut.lz(rand,3)}.webp`})
+			}
+			//prop.media.push({name:'Video', url:'./videos/Morocco.mp4'})
+			let gal = gallery(prop);
+			ut.el('.slide').appendChild(gal);
+			//ut.el('#gen_top').innerHTML = fakeData();
+			ut.el('#gen_bot').innerHTML = fakeData();
+			function fakeData(){
+				return generate.text({
+					sentences_per_paragraps:{num:3, random:false},
+					paragraphs:{num:15, random:false},
+					randomize_words:false,
+					html:{
+						headlines: true,
+						subheadlines: true,
+						tags: true,
+						lists: true,
+						tables: false,
+						quotes: false
+					}
+				})
+			}
+        </script>
+	</head>
+
+	<body class="dark">
+		<header>
+			<div>n000b_ui Gallery</div>
+			<div class="toggle" onclick="document.body.classList.toggle('dark')">Dark/Light Mode Toggle</div>
+		</header>
+		<main>
+			<section id="gen_top">
+			</section>
+			<section class="slide">
+				<h1>Slide</h1>
+			</section>
+			<section id="gen_bot"></section>
+		</main>
+	</body>
+    
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>n000b_UI</title>
+
+        <style>
+            body {
+                background-color: rgb(220,220,220);
+                color: black;
+                font: caption;
+				margin: 0;
+				padding: 0;
+            }
+
+			main {
+				max-width: 1024px;
+				margin: auto;
+				padding-left: 2rem;
+				padding-right: 2rem;
+			}
+			main section{
+				margin-bottom: 4rem;
+			}
+			main section h1{
+				margin-top: 2rem;
+				margin-bottom: 2rem;
+				font-weight: 200;
+				font-size: 1.5rem;
+				opacity: 0.7;
+			}
+
+			header {
+				background-color: rgba(180,180,180);
+				padding-left: 2rem;
+				padding-right: 2rem;
+				color: white;
+				height: 3rem;
+				display: flex;
+				align-items: center;
+			}
+			.toggle {
+				margin-left:auto;
+				cursor: pointer;
+			}
+			body.dark {
+				color: white;
+				background-color: rgb(40,40,40);
+			}
+			.dark header {
+				background-color: rgba(50,50,50);
+			}
+			.audio_demo_inline {
+				margin-bottom: 1rem;
+			}
+			.audio_demo {
+				display: grid;
+				grid-template-columns: auto auto;
+				gap: 1.5rem;
+			}
+        </style>
+        <script type="module">
+            import ut from "./nui/nui_ut.js";
+            import mediaPlayer from "./nui/nui_media_player.js";
+			import global_audio from '../nui/nui_audio_context.js';
+
+            ut.el('main .video_demo').appendChild(mediaPlayer({url:'./videos/The River (Loop Animation).mp4', pause_other_players:true}));
+			ut.el('main .audio_demo_inline').appendChild(mediaPlayer({url:'./audio/Evenless.m4a', type:'audio', classes:'inline', pause_other_players:true}));
+            ut.el('main .audio_demo').appendChild(mediaPlayer({url:'./audio/Evenless.m4a', type:'audio', pause_other_players:true}));
+			ut.el('main .audio_demo').appendChild(mediaPlayer({url:'./audio/Spacer.mp3', type:'audio', pause_other_players:true}));
+			ut.el('main .audio_demo').appendChild(mediaPlayer({url:'./audio/bär.m4a', type:'audio', pause_other_players:true}));
+			ut.el('main .audio_demo').appendChild(mediaPlayer({url:'./audio/Widex.m4a', type:'audio', pause_other_players:true}));
+        </script>
+	</head>
+
+	<body class="dark">
+		<header>
+			<div>n000b_ui Media Player</div>
+			<div class="toggle" onclick="document.body.classList.toggle('dark')">Dark/Light Mode Toggle</div>
+		</header>
+		<main>
+			<section class="video_demo">
+				<h1>Video</h1>
+			</section>
+            <section>
+				<h1>Audio</h1>
+				<div class="audio_demo_inline"></div>
+				<div class="audio_demo">
+					<div class="col1"></div>
+					<div class="col2"></div>
+				</div>
+			</section>
+		</main>
+	</body>
+    
+</html>

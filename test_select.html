@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>n000b_UI</title>
+		<style>
+			body, html {
+				width: 100%;
+				height: 100%;
+				padding:0;
+				margin: 0;
+			}
+			select {
+				display: none;
+			}
+			body {
+				background-color: rgb(220, 220, 220);
+				font: caption;
+				font-size: 15px;
+			}
+			.content {
+				position: absolute;
+				top: 2em;
+				left: 2em;
+				right: 2em;
+				bottom: 2em;
+			}
+			.dark {
+				background-color: rgb(30, 30, 30);
+			}
+
+			.card .inner{
+				max-width: 600px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			::-webkit-scrollbar {
+				width: 0.5em;
+			}
+
+			::-webkit-scrollbar-track {
+				background: rgba(100,100,100,0.5); 
+			}
+			
+			::-webkit-scrollbar-thumb {
+				background: rgba(100,100,100,0.5); 
+				min-height: 5em;
+			}
+
+			::-webkit-scrollbar-thumb:hover {
+				background: rgba(100,100,100,0.7);  
+			}
+
+		</style>
+	</head>
+
+	<body class="dark">
+		<div class="content">
+			<div class="card">
+				<div class="inner">
+					<div style="margin-top: 2em; margin-bottom: 6em;">
+						<select name="Select Mode" id="select_mode">
+							<option value="dark" selected>Dark</option>
+							<option value="light">Light</option>
+						</select>
+					</div>
+					<div style="margin-bottom: 2em;">
+						<select name="Feed the cat" id="select_demo1" multiple>
+							<option value="non">Option on root level</option>
+							<option value="non">Everything</option>
+							<optgroup label="Things">
+								<option value="chair">Chair</option>
+								<option value="table">Table</option>
+								<option value="door" disabled>Door</option>
+								<option value="car">Car</option>
+								<option value="plane" selected>Plane</option>
+								<option value="tree">Tree</option>
+							</optgroup>
+							<option value="non">Nothing</option>
+							<option value="non">Maybe ?</option>
+							<optgroup label="Animals">
+								<option value="dog" selected>Dog</option>
+								<option value="cat">Cat</option>
+								<option value="hamster">Hamster</option>
+								<option value="parrot">Parrot</option>
+								<option value="spider">Spider</option>
+								<option value="goldfish">Goldfish</option>
+							</optgroup>
+						</select>
+					</div>
+					
+					<div style="margin-bottom: 2em;">
+						<select name="Feed the cat" id="select_demo2">
+							<option value="dog" selected>Dog</option>
+							<option value="cat">Cat</option>
+							<option value="hamster">Hamster</option>
+							<option value="parrot">Parrot</option>
+							<option value="spider">Spider</option>
+							<option value="goldfish">Goldfish</option>
+						</select>
+					</div>
+
+					<div style="margin-bottom: 2em;">
+						<select name="Feed the cat" id="select_demo3">
+							<option value="dog">Dog</option>
+							<option value="cat">Cat</option>
+							<option value="hamster">Hamster</option>
+							<option value="parrot">Parrot</option>
+							<option value="spider" selected>Spider</option>
+							<option value="goldfish">Goldfish</option>
+						</select>
+					</div>
+					<div id="injectselect">
+						
+					</div>
+				</div>
+			</div>
+
+			
+		</div>
+	</body>
+	<script type='module'>
+		import superSelect from './nui/nui_select.js';
+		let g = {};
+		g.body = document.querySelector('body');
+
+		function init(){
+			g.mode_select = superSelect(document.querySelector('#select_mode'), {searchable:false})
+			g.mode_select.addEventListener('change', toggleMode)
+			superSelect(document.querySelector('#select_demo1'), {searchable:true})
+			superSelect(document.querySelector('#select_demo2'), {searchable:true})
+			superSelect(document.querySelector('#select_demo3'), {searchable:true})
+			superSelect(null, {
+				target:document.querySelector('#injectselect'), 
+				options:[
+					{name:'First', value:'1'}, 
+					{name:'Second', value:'2'}, 
+					{name:'Third', value:'3'}
+				]
+			})
+		}
+
+		function toggleMode(e){
+			if(e.detail.option.value == 'light'){
+				g.body.classList.remove('dark')
+			}
+			else {
+				g.body.classList.add('dark');
+			}
+			
+		}
+		document.addEventListener("DOMContentLoaded", function (event) {
+			init();
+			
+			/*let selects = document.querySelectorAll('select');
+			for(let i=0; i<selects.length; i++){
+				superSelect(selects[i], {searchable:true})
+			}*/
+		});
+	</script>
+
+</html>

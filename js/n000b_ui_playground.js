@@ -3,6 +3,7 @@
 import ut from "../nui/nui_ut.js";
 import gallery from "../nui/nui_gallery.js";
 import nui from "../nui/nui.js";
+import nui_app from "../nui/nui_app.js";
 
 
 import ex from './experiment.js';
@@ -223,7 +224,9 @@ function go(obj){
 	let id = '#page_' + obj.page;
 	if(obj.id) { id += '_' + obj.id};
 	
-	
+	if(obj.page == 'interaction' && obj.id == 'alerts'){
+		init_page_alerts(ut.el(id));
+	}
 	if(obj.page == 'interaction' && obj.id == 'inputs'){
 		init_page_inputs();
 	}
@@ -264,6 +267,12 @@ function go(obj){
 	g.content.scrollTop = 0;
 }
 
+function init_page_alerts(target){
+	if(!g.page_alerts){
+		g.page_alerts = target;
+		nui.dropZone('Drop Files Here', target.el('#dropzone'), console.log)
+	}
+}
 
 function init_page_inputs(target){
 	if(g.page_inputs){ return; }

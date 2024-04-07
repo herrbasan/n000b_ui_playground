@@ -836,6 +836,10 @@ nuip.toggleButtonProgress = function(e){
 	setTimeout(()=>{t.removeClass('progress')}, 3000);
 }
 
+nuip.loaderShow = function(e){
+	let loader = nui.loaderShow(null, 'Load things ...');
+	loader.addEventListener('click', loader.kill)
+}
 
 nuip.modal_page = function() {
 	let prop = {

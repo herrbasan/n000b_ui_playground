@@ -44,7 +44,7 @@ select {
 
 .gen_side {
 	padding: var(--space-frame);
-	background-color: rgba(var(--color-shadeX),0.03);
+	background-color: rgba(var(--color-shadeX),0.05);
 	border-right: solid thin rgba(var(--color-shadeX),0.03);
 	overflow-x: hidden;
 	overflow-y: auto;

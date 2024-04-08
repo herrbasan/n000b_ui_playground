@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>n000b_UI</title>
+        <link rel='stylesheet' href='css/fonts.css'>
+        <link rel='stylesheet' href="nui/css/nui_main.css">
+		<style>
+			body, html {
+				width: 100%;
+				height: 100%;
+				padding:0;
+				margin: 0;
+                font-size: 16px;
+			}
+			
+
+		</style>
+	</head>
+
+	<body class="dark">
+        <div class="">
+            <main>
+                <section>
+                    <article>
+                        <div class="nui-card nui-hero-card">
+                            <div class="nui-hero-text">
+                                <div>CSS FILTER TRICKERY</div>
+                                <div>Somewhat pointless, but fun to play around with</div>
+                            </div>
+                            <div class="nui-hero-shade"></div>
+                            <img loading="lazy" alt="hero image" src="slide/webp_full_hd/005.webp">
+                        </div>
+    
+                        <div class="nui-card">
+                            <h2>Card</h2>
+                            <span>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                                nostrud
+                                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+                                dolor in
+                                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                                sint
+                                occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+                                laborum.
+                            </span>
+                        </div>
+                        <div class="nui-card split_left">
+                            <div>
+                                <em>Duis aute irure dolor in
+                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</em>
+                            </div>
+                            <div>
+                                <h2>Card Split</h2>
+                                <span>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                                    nostrud
+                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="nui-card split_right">
+                            <div>
+                                <h2>Card Split</h2>
+                                <span>
+                                    Duis aute irure dolor in
+                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                    Excepteur sint
+                                    occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                                    est laborum.
+                                </span>
+                            </div>
+                            <div>
+                                <em>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                    tempor incididunt ut labore et dolore magna aliqua.</em>
+                            </div>
+                        </div>
+                        <div class="nui-card nui-col-two">
+                            <div>
+                                <h2>Two Columns</h2>
+                                <span>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                                    nostrud
+                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                                    irure dolor in
+                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                    Excepteur sint
+                                    occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                                    est laborum.
+                                </span>
+                            </div>
+                            <div>
+                                <span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                        quis nostrud
+                                        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                    <p>Duis aute irure dolor in
+                                        reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                        Excepteur sint
+                                        occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
+                                        id est laborum.
+                                    </p>
+                                </span>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+            </main>
+        </div>
+	</body>
+	<script type='module'>
+		import nui_app from './nui/nui_app.js';
+        import ut from './nui/nui_ut.js';
+        import nui from './nui/nui.js';
+
+		let g = {};
+		g.body = document.querySelector('body');
+
+		async function init(){
+			await nui_app.appWindow({inner:g.body});
+		}
+
+        
+		function toggleMode(e){
+			if(e.detail.option.value == 'light'){
+				g.body.classList.remove('dark')
+			}
+			else {
+				g.body.classList.add('dark');
+			}
+			
+		}
+		document.addEventListener("DOMContentLoaded", function (event) {
+			init();
+		});
+	</script>
+
+</html>

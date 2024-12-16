@@ -175,3 +175,19 @@ select {
 	align-items: center;
 	justify-content: center;
 }
+
+#page_misc_animation .info {
+	display: grid;
+	grid-template-columns: 50% auto;
+}
+#page_misc_animation .ani_timeline {
+	height: 1rem;
+	background-color: rgba(var(--color-shadeX),0.1);
+	cursor: pointer;
+}
+
+#page_misc_animation .ani_timeline div{
+	width: 0%;
+	height: 1rem;
+	background-color: rgba(var(--color-shadeX),0.5);
+}

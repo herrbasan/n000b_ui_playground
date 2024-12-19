@@ -873,9 +873,9 @@ function init_page_animation(){
 	let a = ani({
 		el: img,
 		props:[ 
-			{ offset:0, 'transform-origin':'center center', scale:0.2, rotate:45, opacity:0, easing:'quart.out'},
+			{ 'transform-origin':'center center', scale:0.2, rotate:45, opacity:0, easing:'quart.out'},
 			{ offset:0.4, scale:1, rotate:0, opacity:1, easing:'quart.in' },
-			{ offset:1, scale:1.2, rotate:-45, opacity:0}
+			{  scale:1.2, rotate:-45, opacity:0}
 		], 
 		options:{ 
 			duration: 1500,
@@ -883,40 +883,54 @@ function init_page_animation(){
 		},
 		update:update,
 		cb:console.log,
-		events:console.log
+		events:(e) => {console.log(e.state)}
 	})
 
 	function update(e){
 		info_time.innerText = parseInt(e.currentTime);
-		info_state.innerText = e.target.state;
+		info_state.innerText = e.state;
 		prog.css({width:`${e.progress * 100}%`});
 	}
 
 	content.addEventListener('click', () => a.play(0));
 	g.content.appendChild(g.page_animation);
 	let drag = dragSlider(timeline, (e) => {
-		if(e.type == 'move'){
+		if(e.type == 'start'){
 			a.pause();
+		}
+		if(e.type == 'move'){
 			a.animation.currentTime = e.prozX * a.duration;
 			prog.css({width:`${e.prozX * 100}%`});
 		}
 		else if(e.type == 'end'){
 			a.play(a.animation.currentTime);
 		}
-		else {
-			console.log(e.type)
-		}
-		
 	});
 }
 
 function ani(obj){
-	console.log(parseProps(obj.props));
+
     let keyframes = new KeyframeEffect(obj.el, parseProps(obj.props), obj.options)
     let mation = new Animation(keyframes, document.timeline);
     let ani = {};
 	ani.animation = mation;
 	ani.duration = obj.options.duration;
+	let stops = [];
+	for(let i=0; i<obj.props.length; i++){
+		if(!obj.props[i].offset){
+			if(i == 0){
+				obj.props[i].offset = 0;
+			}
+			else if(i == obj.props.length-1){
+				obj.props[i].offset = 1;
+			}
+			else {
+				obj.props[i].offset = i/obj.props.length;
+			}
+		}
+		stops.push(obj.props[i].offset);
+	}
+	console.log(stops);
 	reset();
     if(!obj.paused) { loop(); play(); }
     
@@ -952,29 +966,53 @@ function ani(obj){
 	function reset(){
 		ani.lastTime = 0;
 		ani.currentTime = 0;
+		ani.currentFrame = 0;
 		ani.state = 'init';
+		ani.lastState = '';
+		ani.last_idx = 0;
 		ani.loop = false;
 	}
 
     function events(msg){
         ani.state = msg;
-        if(obj.events) { obj.events({target:ani, msg:msg});}
+        if(obj.events) {
+			if(ani.lastState != ani.state){
+				ani.lastState = ani.state;
+				obj.events(ani);
+			}
+		}
     }
 
 	function update(){
-		if(obj.update) { 
-			obj.update({target:ani, currentTime:ani.currentTime, progress:ani.currentTime / obj.options.duration}); 
+		if(obj.update) {
+			console.log(mation.playState)
+			let idx = checkforKeyframe();
+			if(ani.last_idx != idx){
+				events('Keyframe_' + idx);
+			}
+			obj.update(ani); 
 		}
+	}
+
+	function checkforKeyframe(){
+		let idx = 0;
+		for(let i=0; i<obj.props.length; i++){
+			if(ani.progress >= obj.props[i].offset){
+				idx = i;
+			}
+		}
+		return idx;
 	}
 
     function loop(){
         if(mation?.currentTime != ani.lastTime){
             ani.currentTime = mation.currentTime;
             ani.lastTime = ani.currentTime;
+			ani.progress = ani.currentTime / obj.options.duration;
             update();
         }
-        //if(ani.loop){ requestAnimationFrame(loop); }
-		requestAnimationFrame(loop);
+        if(ani.loop){ requestAnimationFrame(loop); }
+		//requestAnimationFrame(loop);
     }
 
 	function parseProps(props){

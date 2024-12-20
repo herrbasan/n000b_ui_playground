@@ -850,6 +850,7 @@ function init_page_animation(){
 					<div class="nui-card info">
 						<div class="ani_time"><label>Time</label><div>0</div></div>
 						<div class="ani_state"><label>State</label><div>none</div></div>
+						<div class="ani_keyframe"><label>Keyframe</label><div>0</div></div>
 					</div>
 					<div class="nui-card">
 						<div class="animation_demo">${ut.icon('sync')}</div>
@@ -864,6 +865,7 @@ function init_page_animation(){
 	let content = g.page_animation.el('.animation_demo');
 	let info_time = g.page_animation.el('.ani_time div');
 	let info_state = g.page_animation.el('.ani_state div');
+	let info_keyframe = g.page_animation.el('.ani_keyframe div');
 	let timeline = g.page_animation.el('.ani_timeline');
 	let prog = g.page_animation.el('.ani_timeline .prog');
 
@@ -876,19 +878,22 @@ function init_page_animation(){
 			{ 'transform-origin':'center center', scale:0.2, rotate:45, opacity:0, easing:'quart.out'},
 			{ offset:0.4, scale:1, rotate:0, opacity:1, easing:'quart.in' },
 			{  scale:1.2, rotate:-45, opacity:0}
-		], 
-		options:{ 
-			duration: 1500,
-			fill:'forwards'
-		},
+		],
+		options: { duration: 2000},
 		update:update,
 		cb:console.log,
-		events:(e) => {console.log(e.state)}
+		events:(e) => {
+			if(e.type == 'keyframe'){
+				info_keyframe.innerText = e.target.currentKeyframe;
+			}
+			else {
+				info_state.innerText = e.type;
+			}
+		}
 	})
 
 	function update(e){
 		info_time.innerText = parseInt(e.currentTime);
-		info_state.innerText = e.state;
 		prog.css({width:`${e.progress * 100}%`});
 	}
 
@@ -908,8 +913,25 @@ function init_page_animation(){
 	});
 }
 
-function ani(obj){
 
+function ani(obj){
+	let ani_default_options = { 
+		duration:1000, 
+		fill:'forwards',
+		composit:'add',
+		direction:'normal',
+		delay:0,
+		endDelay:0,
+		iterationStart:0,
+		iterations:1
+
+	}
+	if(obj.options){
+		for(let key in obj.options){
+			ani_default_options[key] = obj.options[key];
+		}
+	}
+	obj.options = ani_default_options;
     let keyframes = new KeyframeEffect(obj.el, parseProps(obj.props), obj.options)
     let mation = new Animation(keyframes, document.timeline);
     let ani = {};
@@ -969,27 +991,18 @@ function ani(obj){
 		ani.currentFrame = 0;
 		ani.state = 'init';
 		ani.lastState = '';
-		ani.last_idx = 0;
+		ani.currentKeyframe = 0;
 		ani.loop = false;
 	}
 
-    function events(msg){
-        ani.state = msg;
+    function events(msg, data){
         if(obj.events) {
-			if(ani.lastState != ani.state){
-				ani.lastState = ani.state;
-				obj.events(ani);
-			}
+			obj.events({type:msg, target:ani});
 		}
     }
 
 	function update(){
 		if(obj.update) {
-			console.log(mation.playState)
-			let idx = checkforKeyframe();
-			if(ani.last_idx != idx){
-				events('Keyframe_' + idx);
-			}
 			obj.update(ani); 
 		}
 	}
@@ -1011,6 +1024,15 @@ function ani(obj){
 			ani.progress = ani.currentTime / obj.options.duration;
             update();
         }
+		if(ani.lastState != mation.playState){
+			ani.lastState = mation.playState;
+			events(mation.playState)
+		}
+		let idx = checkforKeyframe();
+		if(ani.currentKeyframe != idx){
+			ani.currentKeyframe = idx;
+			events('keyframe', {idx:idx});
+		}
         if(ani.loop){ requestAnimationFrame(loop); }
 		//requestAnimationFrame(loop);
     }

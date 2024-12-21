@@ -879,9 +879,10 @@ function init_page_animation(){
 			{ offset:0.4, scale:1, rotate:0, opacity:1, easing:'quart.in' },
 			{  scale:1.2, rotate:-45, opacity:0}
 		],
+		paused:true,
 		options: { duration: 2000},
 		update:update,
-		cb:console.log,
+		cb:finished,
 		events:(e) => {
 			if(e.type == 'keyframe'){
 				info_keyframe.innerText = e.target.currentKeyframe;
@@ -891,24 +892,40 @@ function init_page_animation(){
 			}
 		}
 	})
-
+	a.animation.ready.then((e) => { console.log(e) })
+	
 	function update(e){
 		info_time.innerText = parseInt(e.currentTime);
 		prog.css({width:`${e.progress * 100}%`});
 	}
 
-	content.addEventListener('click', () => a.play(0));
+	function finished(e){
+		console.log(e);
+	}
+
+	content.addEventListener('click', () => {
+		if(a.animation.playState == 'pause' || a.animation.playState == 'running'){
+			a.pause();
+		}
+		else {
+			a.play()
+		}
+	});
 	g.content.appendChild(g.page_animation);
 	let drag = dragSlider(timeline, (e) => {
 		if(e.type == 'start'){
+			a.memState = a.animation.playState;
 			a.pause();
 		}
 		if(e.type == 'move'){
 			a.animation.currentTime = e.prozX * a.duration;
 			prog.css({width:`${e.prozX * 100}%`});
+			a.update();
 		}
 		else if(e.type == 'end'){
-			a.play(a.animation.currentTime);
+			if(a.memState == 'running'){
+				a.play(a.animation.currentTime);
+			}
 		}
 	});
 }
@@ -934,10 +951,11 @@ function ani(obj){
 	obj.options = ani_default_options;
     let keyframes = new KeyframeEffect(obj.el, parseProps(obj.props), obj.options)
     let mation = new Animation(keyframes, document.timeline);
+	let loopStop = true;
     let ani = {};
 	ani.animation = mation;
 	ani.duration = obj.options.duration;
-	let stops = [];
+	ani.stops = [];
 	for(let i=0; i<obj.props.length; i++){
 		if(!obj.props[i].offset){
 			if(i == 0){
@@ -950,11 +968,12 @@ function ani(obj){
 				obj.props[i].offset = i/obj.props.length;
 			}
 		}
-		stops.push(obj.props[i].offset);
+		ani.stops.push(obj.props[i].offset);
 	}
-	console.log(stops);
+	
 	reset();
     if(!obj.paused) { loop(); play(); }
+	else { obj.el.css(parseProp(obj.props[0])); }
     
     mation.onfinish = finish;
     mation.onremove = remove;
@@ -962,26 +981,32 @@ function ani(obj){
 	
     ani.play = play;
     ani.pause = pause;
+	ani.cancel = cancel;
+	ani.update = update;
 
     function play(time){ 
 		events('start');
 		if(time != undefined){mation.currentTime = time};
-		ani.loop = true; 
+		loopStop = false; 
 		mation.play(); 
 		loop(); 
 	}
 
 	function cancel(){
 		events('cancel');
-		reset();
+		mation.cancel();
 	}
 
-    function pause(){ events('pause'); mation.pause(); }
+    function pause(){ 
+		events('pause'); 
+		mation.pause();
+	}
 
-    function remove(e){ events('remove'); ani.loop = false; }
+    function remove(e){ events('remove'); loopStop = true; }
     
     function finish(e){
-        events('finished')
+        events('finished');
+		loopStop = true;
         if(obj.cb) { obj.cb(ani); }
     }
 
@@ -992,7 +1017,6 @@ function ani(obj){
 		ani.state = 'init';
 		ani.lastState = '';
 		ani.currentKeyframe = 0;
-		ani.loop = false;
 	}
 
     function events(msg, data){
@@ -1002,28 +1026,11 @@ function ani(obj){
     }
 
 	function update(){
-		if(obj.update) {
-			obj.update(ani); 
-		}
-	}
-
-	function checkforKeyframe(){
-		let idx = 0;
-		for(let i=0; i<obj.props.length; i++){
-			if(ani.progress >= obj.props[i].offset){
-				idx = i;
-			}
-		}
-		return idx;
-	}
-
-    function loop(){
-        if(mation?.currentTime != ani.lastTime){
-            ani.currentTime = mation.currentTime;
-            ani.lastTime = ani.currentTime;
+		if(mation?.currentTime != ani.lastTime){
+			ani.currentTime = mation.currentTime;
+			ani.lastTime = ani.currentTime;
 			ani.progress = ani.currentTime / obj.options.duration;
-            update();
-        }
+		}
 		if(ani.lastState != mation.playState){
 			ani.lastState = mation.playState;
 			events(mation.playState)
@@ -1033,8 +1040,24 @@ function ani(obj){
 			ani.currentKeyframe = idx;
 			events('keyframe', {idx:idx});
 		}
-        if(ani.loop){ requestAnimationFrame(loop); }
-		//requestAnimationFrame(loop);
+		if(obj.update) {
+			obj.update(ani); 
+		}
+	}
+
+	function checkforKeyframe(){
+		let idx = 0;
+		for(let i=0; i<ani.stops.length; i++){
+			if(ani.progress >= ani.stops[i]){
+				idx = i;
+			}
+		}
+		return idx;
+	}
+
+    function loop(){
+		if(mation){ update();}
+		if(!loopStop){ requestAnimationFrame(loop); }
     }
 
 	function parseProps(props){

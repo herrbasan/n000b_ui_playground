@@ -848,6 +848,7 @@ function init_page_animation(){
 		<main id="page_misc_animation">
 			<section>
 				<article>
+					<h1>NUI Animation</h2>
 					<div class="nui-card info">
 						<div class="ani_time"><label>Time</label><div>0</div></div>
 						<div class="ani_state"><label>State</label><div>none</div></div>
@@ -858,6 +859,12 @@ function init_page_animation(){
 					</div>
 					<div class="nui-card">
 						<div class="ani_timeline"><div class="prog"></div></div>
+					</div>
+				</article>
+				<article>
+					<h1>Simple Animations</h2>
+					<div class="nui-card">
+						<div class="animation_demo2">${ut.icon('layers')}</div>
 					</div>
 				</article>
 			</section>
@@ -873,28 +880,30 @@ function init_page_animation(){
 	content.css({height:'100%', display:'flex', 'align-items':'center', 'justify-content':'center'})
 	let img = content.el('svg');
 	img.css({width:'50%', height:'50%'});
-	let a = ani({
-		el: img,
-		props:[ 
+	let a = ani(img, 2000,
+		[ 
 			{ 'transform-origin':'center center', scale:0.2, rotate:45, opacity:0, easing:'quart.out'},
 			{ offset:0.4, scale:1, rotate:0, opacity:1, easing:'quart.in' },
-			{  scale:1.2, rotate:-45, opacity:0}
+			{ scale:1.2, rotate:-45, opacity:0}
 		],
-		paused:true,
-		options: { duration: 2000},
-		update:update,
-		cb:finished,
-		events:(e) => {
-			if(e.type == 'keyframe'){
-				info_keyframe.innerText = e.target.currentKeyframe;
-			}
-			else {
-				info_state.innerText = e.type;
-			}
+		{
+			paused:true,
+			update:update,
+			cb:finished,
+			events:events
 		}
-	})
+	)
 	a.animation.ready.then((e) => { console.log(e) })
 	
+	function events(e){
+		if(e.type == 'keyframe'){
+			info_keyframe.innerText = e.target.currentKeyframe;
+		}
+		else {
+			info_state.innerText = e.type;
+		}
+	}
+
 	function update(e){
 		info_time.innerText = parseInt(e.currentTime);
 		prog.css({width:`${e.progress * 100}%`});
@@ -929,6 +938,25 @@ function init_page_animation(){
 			}
 		}
 	});
+
+	let hover = g.page_animation.el('.animation_demo2');
+	hover.css({width:'5rem', height:'5rem', cursor:'pointer'})
+	let hover_img = g.page_animation.el('.animation_demo2 svg');
+	hover_img.css({width:'100%', height:'100%', 'pointer-events':'none'})
+	hover.addEventListener('mouseover', hoverEvents);
+	hover.addEventListener('mouseout', hoverEvents);
+	hover.addEventListener('click', hoverEvents);
+	function hoverEvents(e){
+		if(e.type == 'mouseover'){
+			ani(hover, 500, [{ easing:'back.out'},{ rotate:90, scale:1.2 }])
+		}
+		if(e.type == 'mouseout'){
+			ani(hover, 500, [{ easing:'quart.out'},{ scale:1 }])
+		}
+		if(e.type == 'click'){
+			ani(hover, 500, [{ easing:'quart.inOut', rotate:90, scale:0.9},{ rotate:90, scale:1.2 }])
+		}
+	}
 }
 
 

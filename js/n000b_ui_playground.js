@@ -899,11 +899,18 @@ function init_page_animation(){
 	content.css({height:'100%', display:'flex', 'align-items':'center', 'justify-content':'center'})
 	let img = content.el('svg');
 	img.css({width:'50%', height:'50%'});
-	let a = ani(img, 2000,
-		[ 
+	let a = ani(img, 3000,
+		/*[ 
 			{ 'transform-origin':'center center', scale:0.2, rotate:45, opacity:0, easing:'quart.out'},
 			{ offset:0.4, scale:1, rotate:0, opacity:1, easing:'quart.in' },
 			{ scale:1.2, rotate:-45, opacity:0}
+		],*/
+		[
+			{'transform-origin':'center center', x:0, rotate:0, easing:'cubic.inOut'},
+			{x:-100, rotate:-30, easing:'cubic.inOut'},
+			{x:150, rotate:20, easing:'cubic.inOut'},
+			{x:0, scale:0.5, rotate:-180, easing:'cubic.inOut'},
+			{x:0, scale:1, y:0, rotate:0, easing:'cubic.inOut'}
 		],
 		{
 			delay:500,
@@ -914,6 +921,7 @@ function init_page_animation(){
 			events:events
 		}
 	)
+	console.log(a.stops)
 	a.animation.ready.then((e) => { console.log(e) })
 	
 	function events(e){

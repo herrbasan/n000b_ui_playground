@@ -836,8 +836,27 @@ function init_page_icons(){
 				<div class="name">${key}</div>
 			</div>
 		`)
+		html.addEventListener('mouseover', hoverEvents)
+		html.addEventListener('mouseout', hoverEvents)
+		html.addEventListener('click', hoverEvents)
+		html.el('.icon').css({'pointer-events':'none'})
+		html.el('.name').css({'pointer-events':'none'})
 		content.appendChild(html);
 	}
+
+	function hoverEvents(e){
+		let el = e.currentTarget;
+		if(e.type == 'mouseover'){
+			el.ani(500, { easing:'quart.out', scale:2, 'zIndex':'1' });
+		}
+		if(e.type == 'mouseout'){
+			el.ani(500, { easing:'quart.out', scale:1, 'zIndex':'0'});
+		}
+		if(e.type == 'click'){
+			el.ani(500, { easing:'expo.inOut', scale:1.5, rotate:180, scale:2 })
+		}
+	}
+
 	g.content.appendChild(g.page_icons);
 }
 
@@ -887,6 +906,8 @@ function init_page_animation(){
 			{ scale:1.2, rotate:-45, opacity:0}
 		],
 		{
+			delay:500,
+			endDelay:500,
 			paused:true,
 			update:update,
 			cb:finished,
@@ -928,7 +949,7 @@ function init_page_animation(){
 			a.pause();
 		}
 		if(e.type == 'move'){
-			a.animation.currentTime = e.prozX * a.duration;
+			a.animation.currentTime = e.prozX * a.totalDuration;
 			prog.css({width:`${e.prozX * 100}%`});
 			a.update();
 		}
@@ -948,13 +969,13 @@ function init_page_animation(){
 	hover.addEventListener('click', hoverEvents);
 	function hoverEvents(e){
 		if(e.type == 'mouseover'){
-			ani(hover, 500, [{ easing:'back.out'},{ rotate:90, scale:1.2 }])
+			ani(hover, 500, { easing:'back.out', rotate:90, scale:1.2})
 		}
 		if(e.type == 'mouseout'){
-			ani(hover, 500, [{ easing:'quart.out'},{ scale:1 }])
+			ani(hover, 500, { easing:'quart.out', scale:1 })
 		}
 		if(e.type == 'click'){
-			ani(hover, 500, [{ easing:'quart.inOut', rotate:90, scale:0.9},{ rotate:90, scale:1.2 }])
+			ani(hover, 500, { easing:'quart.inOut', rotate:90, scale:0.9, rotate:90, scale:1.2 })
 		}
 	}
 }

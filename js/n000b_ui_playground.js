@@ -878,6 +878,7 @@ function init_page_animation(){
 					</div>
 					<div class="nui-card">
 						<div class="ani_timeline"><div class="prog"></div></div>
+						<div class="ani_stops"></div>
 					</div>
 				</article>
 				<article>
@@ -894,9 +895,11 @@ function init_page_animation(){
 	let info_state = g.page_animation.el('.ani_state div');
 	let info_keyframe = g.page_animation.el('.ani_keyframe div');
 	let timeline = g.page_animation.el('.ani_timeline');
+	let timeline_stops = g.page_animation.el('.ani_stops');
 	let prog = g.page_animation.el('.ani_timeline .prog');
-
 	content.css({height:'100%', display:'flex', 'align-items':'center', 'justify-content':'center'})
+	
+	// Demo 1
 	let img = content.el('svg');
 	img.css({width:'50%', height:'50%'});
 	let a = ani(img, 3000,
@@ -914,14 +917,14 @@ function init_page_animation(){
 		],
 		{
 			delay:500,
-			endDelay:500,
+			endDelay:1000,
 			paused:true,
 			update:update,
 			cb:finished,
 			events:events
 		}
 	)
-	console.log(a.stops)
+	
 	a.animation.ready.then((e) => { console.log(e) })
 	
 	function events(e){
@@ -967,7 +970,29 @@ function init_page_animation(){
 			}
 		}
 	});
+	console.log(a.stops)
 
+	for(let i=0; i<a.stops.length; i++){
+		let color = 'rgba(150,150,150,0.7)';
+		if(i % 2 == 0) { color = 'rgba(150,150,150,0.1)';}
+		let w = '1%'
+		if(i < a.stops.length-1){
+			w = ((a.stops[i+1] - a.stops[i])/a.totalDuration)*100 + '%';
+		
+			ut.createElement('div', {
+				target:timeline_stops, 
+				class:'stops', 
+				style:{
+					width:'1rem', 
+					'background-color':color,
+					left:(a.stops[i]/a.totalDuration)*100 + '%',
+					width:w
+					
+				}
+			})
+		}
+	}
+	// Demo 2
 	let hover = g.page_animation.el('.animation_demo2');
 	hover.css({width:'5rem', height:'5rem', cursor:'pointer'})
 	let hover_img = g.page_animation.el('.animation_demo2 svg');
@@ -1089,8 +1114,8 @@ nuip.changeColor = function (e) {
 	}
 }
 
-nuip.randomColor = function () {
-	return Math.ceil(Math.random() * 255);
+nuip.randomColor = function (range=255) {
+	return Math.ceil(Math.random() * range);
 }
 
 nuip.playVideo = function (e) {

@@ -184,10 +184,24 @@ select {
 	height: 1rem;
 	background-color: rgba(var(--color-shadeX),0.1);
 	cursor: pointer;
+	margin-bottom: 0.3rem;
 }
 
 #page_misc_animation .ani_timeline div{
 	width: 0%;
 	height: 1rem;
 	background-color: rgba(var(--color-shadeX),0.5);
+}
+
+#page_misc_animation .ani_stops{
+	position: relative;
+	height: 0.3rem;
+	background-color: rgba(var(--color-shadeX),0.1);
+}
+
+#page_misc_animation .ani_stops div{
+	position: absolute;
+	height: 100%;
+	width:0%;
+	background-color: rgba(150,100,100,1);
 }

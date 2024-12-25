@@ -199,9 +199,15 @@ select {
 	background-color: rgba(var(--color-shadeX),0.1);
 }
 
-#page_misc_animation .ani_stops div{
+#page_misc_animation .ani_stops > div{
 	position: absolute;
 	height: 100%;
+	opacity: 0.5;
 	width:0%;
-	background-color: rgba(150,100,100,1);
+}
+
+#page_misc_animation .ani_stops > div span{
+	position: absolute;
+	top: 0.5rem;
+	font-size: 0.7rem;
 }

@@ -973,17 +973,18 @@ function init_page_animation(){
 	console.log(a.stops)
 
 	for(let i=0; i<a.stops.length; i++){
-		let color = 'rgba(150,150,150,0.7)';
-		if(i % 2 == 0) { color = 'rgba(150,150,150,0.1)';}
+		let color = 'rgba(255,255,255,1)';
+		if(i % 2 == 0) { color = 'rgba(150,150,150,1)';}
 		let w = '1%'
 		if(i < a.stops.length-1){
 			w = ((a.stops[i+1] - a.stops[i])/a.totalDuration)*100 + '%';
 		
 			ut.createElement('div', {
 				target:timeline_stops, 
-				class:'stops', 
+				class:'stops',
+				inner:`<span>${i}</span>`, 
 				style:{
-					width:'1rem', 
+					width:'1rem',
 					'background-color':color,
 					left:(a.stops[i]/a.totalDuration)*100 + '%',
 					width:w
@@ -1011,6 +1012,12 @@ function init_page_animation(){
 			ani(hover, 500, { easing:'quart.inOut', rotate:90, scale:0.9, rotate:90, scale:1.2 })
 		}
 	}
+	ut.isVisibleObserver(hover, (e) => {
+		if(e.target.isVisible){
+			console.log('true')
+			e.target.removeVisibilityEvent();
+		}
+	})
 }
 
 

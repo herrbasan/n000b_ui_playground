@@ -926,6 +926,13 @@ function init_page_animation(){
 	)
 	
 	a.animation.ready.then((e) => { console.log(e) })
+	ut.isVisibleObserver(content, (e) => {
+		if(e.target.isVisible){
+			a.play();
+			return;
+		}
+		a.pause();
+	})
 	
 	function events(e){
 		if(e.type == 'keyframe'){
@@ -1012,12 +1019,6 @@ function init_page_animation(){
 			ani(hover, 500, { easing:'quart.inOut', rotate:90, scale:0.9, rotate:90, scale:1.2 })
 		}
 	}
-	ut.isVisibleObserver(hover, (e) => {
-		if(e.target.isVisible){
-			console.log('true')
-			e.target.removeVisibilityEvent();
-		}
-	})
 }
 
 

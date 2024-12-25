@@ -197,6 +197,7 @@ select {
 	position: relative;
 	height: 0.3rem;
 	background-color: rgba(var(--color-shadeX),0.1);
+	user-select: none;
 }
 
 #page_misc_animation .ani_stops > div{

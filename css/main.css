@@ -184,7 +184,7 @@ select {
 	height: 1rem;
 	background-color: rgba(var(--color-shadeX),0.1);
 	cursor: pointer;
-	margin-bottom: 0.3rem;
+	margin-bottom: 0.5rem;
 }
 
 #page_misc_animation .ani_timeline div{
@@ -195,16 +195,26 @@ select {
 
 #page_misc_animation .ani_stops{
 	position: relative;
-	height: 0.3rem;
-	background-color: rgba(var(--color-shadeX),0.1);
+	height: 2rem;
 	user-select: none;
 }
 
 #page_misc_animation .ani_stops > div{
 	position: absolute;
 	height: 100%;
-	opacity: 0.5;
+	opacity: 0.3;
 	width:0%;
+	height: 100%;
+	cursor: pointer;
+	transition: opacity 0.1s;
+}
+#page_misc_animation .ani_stops > div:hover{
+	opacity: 1;
+}
+#page_misc_animation .ani_stops > div .bar{
+	position: absolute;
+	width: 100%; 
+	height: 0.3rem;
 }
 
 #page_misc_animation .ani_stops > div span{

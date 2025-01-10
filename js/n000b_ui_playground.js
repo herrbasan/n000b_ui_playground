@@ -699,6 +699,15 @@ function init_page_html5(){
 			g.page_html.appendChild(html[i]);
 		}
 		upgradeElements(g.page_html);
+		ut.isVisibleObserver(g.page_html.el('#text__blockquotes'), (e) => { 
+			console.log(e.currentTarget.isVisible);
+			if(e.currentTarget.isVisible){
+				e.currentTarget.style.setProperty('background-color','rgba(255,0,0,0.2)')
+			}
+			else {
+				e.currentTarget.style.removeProperty('background-color')
+			}
+		}, {root:document, threshold: 1})
 	})
 }
 
@@ -986,18 +995,18 @@ function init_page_animation(){
 		if(i < a.stops.length-1){
 			w = ((a.stops[i+1] - a.stops[i])/a.totalDuration)*100 + '%';
 		
-			ut.createElement('div', {
+			let item = ut.createElement('div', {
 				target:timeline_stops, 
 				class:'stops',
-				inner:`<span>${i}</span>`, 
+				inner:`<div class="bar"></div><span>${i}</span>`, 
 				style:{
-					width:'1rem',
-					'background-color':color,
 					left:(a.stops[i]/a.totalDuration)*100 + '%',
 					width:w
-					
-				}
+				},
+				events:{click:(e) => {a.animation.currentTime = e.currentTarget.idx}}
 			})
+			item.idx = a.stops[i];
+			item.el('.bar').css({'background-color':color});
 		}
 	}
 	// Demo 2

@@ -628,8 +628,7 @@ function init_page_superlist(){
 			{label:'Modification Date', prop:'m_date', numeric:true}
 		],
 		search: [
-			{prop:'name'},
-			{prop:'idx'}
+			{prop:'name'}
 		],
 		footer: {
 			buttons_left: [
